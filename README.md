@@ -2,7 +2,7 @@
 
 Invitación digital de **Karina Querén Vázquez Ledezma** y **Alexis Eduardo Hernández Mejía**, diseñada y producida por **Vector Inside**. Reúne una portada animada con música, la información de la celebración, fotografías, confirmación de asistencia con acompañantes y un álbum de recuerdos que los organizadores moderan antes de publicarlo.
 
-**Entrega de desarrollo: versión V13, 3 de noviembre de 2026.** La aplicación fue revisada localmente. Este repositorio entrega código y recursos; cargarlo en GitHub no publica por sí mismo el servicio de la boda.
+**Entrega de desarrollo: versión V16, 3 de noviembre de 2026.** La aplicación fue revisada localmente. Este repositorio entrega código y recursos; cargarlo en GitHub no publica por sí mismo el servicio de la boda.
 
 ![Galería con abanico de fotografías](docs/screenshots/album-animado.jpg)
 
@@ -66,7 +66,7 @@ El mapa apunta a la ficha del **residencial**; no se afirmó haber localizado un
 - No hay lista nominal precargada ni cupos individuales por invitación. El invitado declara acompañantes; el formulario no concede pases adicionales.
 - El token guardado en el navegador permite actualizar la misma respuesta. Otro navegador/dispositivo puede producir un registro duplicado. No se deduplican personas solo por su nombre.
 - No se importaron respuestas históricas de WhatsApp. Los totales solo cuentan respuestas guardadas por esta aplicación.
-- El QR contiene información del pase; no es una firma criptográfica ni un sistema automático de validación o bloqueo de entradas repetidas. Recepción coteja la referencia en la lista del panel.
+- El QR contiene exclusivamente la URL de Google Maps de la boda. No valida identidad ni bloquea entradas repetidas. El nombre, acompañantes y referencia permanecen impresos en el pase; recepción coteja esa referencia en el panel.
 - El panel comparte una contraseña y no tiene roles separados, cuentas personales, 2FA ni bitácora de quién aprobó cada foto.
 - Las sesiones, el límite de intentos de acceso y el control de frecuencia de fotos viven en memoria y se reinician con el proceso.
 - El álbum carga las fotos aprobadas al abrir/recargar la página. El panel usa “Actualizar”; no hay sincronización en tiempo real.
@@ -311,6 +311,7 @@ No hay Supabase, Firebase, D1, R2, Docker ni un proveedor cloud preconfigurado. 
     ├── motion.css                 # Abanico y efectos visuales
     ├── motion.js                  # Observadores y movimiento al recorrer
     ├── music.js                   # Reproducir/pausar MP3 y visibilidad de portada
+    ├── lyrics.js                  # Letra sincronizada y avance de canción
     ├── admin.html                 # Entrada y estructura del panel
     ├── admin.css                  # Diseño del panel
     ├── admin.js                   # Sesión, totales, CSV y moderación
@@ -354,7 +355,7 @@ La portada presenta los nombres cortos y un botón de canción. La fotografía s
 
 ### 2. Escuchar la canción
 
-“Nuestra canción, contigo” inicia el MP3 al tocarlo. El audio usa preload=none y loop; la animación visual funciona sin sonido y dura 26 segundos por ciclo. El botón de portada y un control flotante permiten pausar/reanudar. El control flotante aparece después de iniciar la canción. Los navegadores móviles suelen bloquear el sonido sin una interacción; no se fuerza autoplay audible. Al reducir movimiento se detiene la animación, y al salir la portada de pantalla se pausa su bucle visual. La canción puede seguir durante el recorrido.
+“Nuestra canción, contigo” inicia el MP3 al tocarlo. El audio usa preload=none y loop; la animación visual funciona sin sonido y dura 16 segundos por ciclo. El botón de portada y un control flotante permiten pausar/reanudar. El control flotante aparece después de iniciar la canción. Los navegadores móviles suelen bloquear el sonido sin una interacción; no se fuerza autoplay audible. Al reducir movimiento se detiene la animación, y al salir la portada de pantalla se pausa su bucle visual. La canción puede seguir durante el recorrido.
 
 ### 3. Explorar fotos
 
@@ -539,7 +540,7 @@ Hay más contexto en [docs/DECISIONES.md](docs/DECISIONES.md).
 
 La película final queda reservada para la boda y ya no tiene acceso desde la invitación. Los videos preliminares tampoco se sirven como recursos públicos. No se modificó ni borró el montaje final original ni se cambió la configuración de su proveedor de video.
 
-La animación de portada es movimiento de cámara simulado con CSS sobre la fotografía original, no un nuevo rodaje ni un video generado. El ciclo de 26 segundos empieza y termina con el mismo encuadre. Se detiene cuando la portada no está visible y respeta reducir movimiento.
+La animación de portada es movimiento de cámara simulado con CSS sobre la fotografía original, no un nuevo rodaje ni un video generado. El ciclo de 16 segundos empieza y termina con el mismo encuadre. Se detiene cuando la portada no está visible y respeta reducir movimiento.
 
 El archivo `dist/assets/music/photographs.mp3` es copia del MP3 proporcionado por el responsable: 257.83 segundos, estéreo a 44.1 kHz, aproximadamente 4.1 MB. No se modificó el original. Se reproduce tras un toque, al 55 % de volumen inicial y en bucle; el usuario puede pausarlo en portada o con el botón flotante. Probar salida de sonido y controles desde WhatsApp en dispositivos físicos antes de publicar.
 
@@ -683,4 +684,18 @@ Este proyecto debe cargarse únicamente en `VectorInside/INVITACION-DE-BODA-KARI
 
 ## Cambio V13 · Película reservada y portada con música
 
-Se retiró de la invitación todo acceso al montaje final y se movieron videos y subtítulos preliminares fuera de la carpeta pública. El nuevo hero usa una fotografía en movimiento lento de 26 segundos en bucle y la canción MP3 aportada por el responsable, con inicio voluntario y pausa. Se conserva el acceso de organizadores por contraseña y la limpieza V12 de datos de prueba.
+Se retiró de la invitación todo acceso al montaje final y se movieron videos y subtítulos preliminares fuera de la carpeta pública. El nuevo hero usa una fotografía en movimiento de 16 segundos en bucle y la canción MP3 aportada por el responsable, con inicio voluntario y pausa. Se conserva el acceso de organizadores por contraseña y la limpieza V12 de datos de prueba.
+
+## V14 · Movimiento más visible y letra
+
+Se amplió el recorrido de la cámara sobre la foto y se redujo el ciclo de la portada a 16 segundos. Bajo el hero aparece Photograph con 58 frases de la letra aportada por el responsable, sincronización inicial obtenida localmente a partir del MP3, controles de reproducción y avance, y letra completa desplegable. Los tiempos son una alineación automática con ajustes iniciales; revisar su precisión musical en la validación final. El sitio no necesita el modelo de transcripción para funcionar: solo el JSON de frases y sus marcas de tiempo.
+
+Archivos nuevos: dist/lyrics.js y dist/assets/music/photograph-lyrics.json. No se volvió a incorporar la película ni su enlace. Se conserva la preferencia de reducir movimiento, el inicio voluntario de sonido y la pausa accesible.
+
+## V15 · Letra vinculada a las fotos
+
+La frase sincronizada ahora se muestra al pie de la fotografía del hero, debajo de la fotografía de Nuestra historia y debajo del carrete de sección 03. Las tres copias usan el mismo currentTime del único audio, no reinician al cambiar de sección y se congelan al pausar. Se quitaron el bloque grande y la siguiente frase destacada; queda una franja compacta de controles y letra completa desplegable de unos 127 px en la vista comprobada. Las frases usan fade out de 180 ms y fade in de 900 ms, sin desplazamiento, respetando reducir movimiento. La letra es pequeña y editorial para acompañar las fotos.
+
+## V16 · QR de ubicación
+
+El QR del pase ahora codifica exactamente la URL del botón VER UBICACIÓN identificado como wedding-map en el HTML, incluida la ficha de Alboreto Residencial. Ya no codifica texto con nombre/referencia. Esos datos se mantienen impresos en el pase. Se verificó decodificando el PNG realmente generado desde el formulario en un servidor de prueba aislado: hostname www.google.com y query_place_id ChIJq13C7TKLzYURUTEebuCBcDM. Los PNG descargados anteriormente deben generarse de nuevo para cambiar su QR.
