@@ -1,8 +1,8 @@
 # Karina & Alexis · Invitación cinematográfica de boda
 
-Invitación digital de **Karina Querén Vázquez Ledezma** y **Alexis Eduardo Hernández Mejía**, diseñada y producida por **Vector Inside**. Reúne una película de su historia, la información de la celebración, fotografías, confirmación de asistencia con acompañantes y un álbum de recuerdos que los organizadores moderan antes de publicarlo.
+Invitación digital de **Karina Querén Vázquez Ledezma** y **Alexis Eduardo Hernández Mejía**, diseñada y producida por **Vector Inside**. Reúne una portada animada con música, la información de la celebración, fotografías, confirmación de asistencia con acompañantes y un álbum de recuerdos que los organizadores moderan antes de publicarlo.
 
-**Entrega de desarrollo: versión V11, 3 de noviembre de 2026.** La aplicación fue revisada localmente. Este repositorio entrega código y recursos; cargarlo en GitHub no publica por sí mismo el servicio de la boda.
+**Entrega de desarrollo: versión V13, 3 de noviembre de 2026.** La aplicación fue revisada localmente. Este repositorio entrega código y recursos; cargarlo en GitHub no publica por sí mismo el servicio de la boda.
 
 ![Galería con abanico de fotografías](docs/screenshots/album-animado.jpg)
 
@@ -39,7 +39,7 @@ Invitación digital de **Karina Querén Vázquez Ledezma** y **Alexis Eduardo He
 | Dirección | Calle Ali Chumacero 1000, San Lorenzo Coacalco, CP 52140, Metepec, Estado de México |
 | Vestimenta | Formal; hombres, evitar azul marino |
 | WhatsApp de contacto | +52 722 647 81 30 |
-| Película final | [ALEXIS Y KARII en YouTube](https://youtu.be/X3-ZLqJwMeo), 5:23 |
+| Música de la invitación | MP3 proporcionado por el responsable, 4:17; reproducción voluntaria |
 | Mapa | [Ficha de Alboreto Residencial](https://www.google.com/maps/search/?api=1&query=Alboreto%20Residencial&query_place_id=ChIJq13C7TKLzYURUTEebuCBcDM) |
 
 El mapa apunta a la ficha del **residencial**; no se afirmó haber localizado un punto independiente del salón dentro del conjunto. No se inventó el tipo religioso o civil de la ceremonia. Los nombres cortos “Karina & Alexis” se conservan en portada y firmas; la presentación formal incluye los nombres completos con acentos.
@@ -49,7 +49,7 @@ El mapa apunta a la ficha del **residencial**; no se afirmó haber localizado un
 ### Implementado
 
 - Diseño adaptable a celular, tableta y escritorio, azul marino, dorado y marfil.
-- Película de YouTube que se carga después de una acción voluntaria y de un aviso para usar audífonos y girar el celular.
+- Portada con movimiento lento cíclico sobre la fotografía y música local que comienza con un toque, con pausa accesible durante el recorrido.
 - Portada, historia, nombres, fecha, recepción, ceremonia, vestimenta y acceso al mapa.
 - Galería original de 12 fotografías seleccionadas, con desplazamiento horizontal y visor ampliado.
 - Abanico introductorio de cinco fotos que abre las imágenes del mismo álbum.
@@ -70,7 +70,7 @@ El mapa apunta a la ficha del **residencial**; no se afirmó haber localizado un
 - El panel comparte una contraseña y no tiene roles separados, cuentas personales, 2FA ni bitácora de quién aprobó cada foto.
 - Las sesiones, el límite de intentos de acceso y el control de frecuencia de fotos viven en memoria y se reinician con el proceso.
 - El álbum carga las fotos aprobadas al abrir/recargar la página. El panel usa “Actualizar”; no hay sincronización en tiempo real.
-- Se observó “video no disponible” en el iframe del navegador de prueba, aunque la página directa de YouTube sí permitió reproducirlo. Debe verificarse en el dominio final. El acceso directo a YouTube permanece disponible.
+- La película final se reservó para proyectarse en la boda. No está enlazada ni alojada en la carpeta pública de esta versión.
 
 ## Descargar e instalar
 
@@ -166,7 +166,7 @@ El acceso al que se llamó “puerta trasera” durante el diseño es el **panel
 | Entrada desde la invitación | Enlace discreto “Acceso organizadores ↗” al pie |
 | Usuario | No se pide nombre de usuario |
 | Contraseña acordada para este evento | **`eduardo&queren`** |
-| Vigencia de una sesión | 8 horas, o hasta cierre de sesión/reinicio del proceso |
+| Vigencia de una sesión | 8 horas como máximo dentro del panel abierto; cada nueva entrada al panel vuelve a pedir contraseña |
 
 **La contraseña se documenta aquí por solicitud expresa del responsable del proyecto. Este repositorio es público: por tanto, no debe considerarse un secreto y cualquiera que lea este README puede conocerla.** Ocultar visualmente el enlace no restringe el acceso. El responsable solicitó mantener esta contraseña para el evento; no se implementó cambio ni caducidad automática después de la boda.
 
@@ -210,7 +210,7 @@ Estas medidas describen la implementación, pero **no compensan la publicación 
 
 ## Arquitectura
 
-La aplicación usa un frontend estático sin proceso de compilación, servido por un proceso Python que también atiende las rutas de datos. SQLite conserva registros y un directorio privado conserva imágenes optimizadas. El video final permanece en YouTube.
+La aplicación usa un frontend estático sin proceso de compilación, servido por un proceso Python que también atiende las rutas de datos. SQLite conserva registros y un directorio privado conserva imágenes optimizadas. El MP3 de la invitación se sirve como recurso local; la película final está reservada para el evento.
 
 ```mermaid
 flowchart TB
@@ -238,7 +238,7 @@ flowchart TB
     H --> I
     I --> P
     H --> P
-    G --> Y["YouTube · película final"]
+    G --> Y["MP3 local · música voluntaria"]
     G --> W["WhatsApp · aviso opcional"]
     G --> M["Google Maps · ubicación"]
 ```
@@ -306,10 +306,11 @@ No hay Supabase, Firebase, D1, R2, Docker ni un proveedor cloud preconfigurado. 
 └── dist/                          # Única raíz de contenido público
     ├── index.html                 # Invitación y diálogos
     ├── style.css                  # Diseño base y adaptaciones móviles
-    ├── app.js                     # Video, galería, confirmación y pase
+    ├── app.js                     # Galería, confirmación y pase
     ├── memories.js                # Envío y consulta de recuerdos
     ├── motion.css                 # Abanico y efectos visuales
     ├── motion.js                  # Observadores y movimiento al recorrer
+    ├── music.js                   # Reproducir/pausar MP3 y visibilidad de portada
     ├── admin.html                 # Entrada y estructura del panel
     ├── admin.css                  # Diseño del panel
     ├── admin.js                   # Sesión, totales, CSV y moderación
@@ -319,12 +320,12 @@ No hay Supabase, Firebase, D1, R2, Docker ni un proveedor cloud preconfigurado. 
         ├── gallery/               # 12 fotos: pequeña y completa
         ├── vendor/                # QRCode y licencia MIT
         ├── *.jpg                  # Portada e imágenes de historia
-        └── *.mp4, *.vtt            # Cortes preliminares locales conservados
+        └── music/photographs.mp3  # Canción proporcionada para la invitación
 ```
 
-Se conserva el directorio `dist/` completo de la entrega local, incluidos algunos recursos de versiones anteriores. La película actual se toma de YouTube; los MP4 preliminares no están enlazados como película principal. [Inventario detallado](docs/INVENTARIO-ARCHIVOS.md).
+Se entrega la carpeta pública actual. Los MP4 preliminares y subtítulos de versiones previas se retiraron de dist para reservar la película. [Inventario detallado](docs/INVENTARIO-ARCHIVOS.md).
 
-No se suben la carpeta `.private/`, bases de datos de invitados, fotos recibidas, archivos de acceso locales, grabaciones de WhatsApp, entrevistas originales ni bibliotecas personales de video. Son material operativo o privado, no dependencias necesarias para ejecutar esta entrega. El video final de alta calidad se entrega mediante su enlace de YouTube, no duplicado en Git.
+No se suben la carpeta `.private/`, bases de datos de invitados, fotos recibidas, archivos de acceso locales, grabaciones de WhatsApp, entrevistas originales ni bibliotecas personales de video. Son material operativo o privado, no dependencias necesarias para ejecutar esta entrega. La película final no se entrega ni se enlaza en este repositorio para conservar la sorpresa del evento.
 
 ## Dependencias
 
@@ -343,17 +344,17 @@ No se suben la carpeta `.private/`, bases de datos de invitados, fotos recibidas
 
 No hay `npm install`, bundle, transpiler ni servidor de Vite. El nombre `dist` identifica la carpeta pública mantenida directamente, no un resultado que deba regenerarse con un build.
 
-YouTube, Google Maps y WhatsApp son enlaces/reproductor del navegador. No hay API key de esos servicios en el proyecto ni integración con sus bandejas de mensajes.
+Google Maps y WhatsApp son enlaces del navegador. No hay API key de esos servicios ni integración con bandejas de mensajes. La canción es un MP3 local y no utiliza un iframe externo.
 
 ## Recorrido de invitados
 
 ### 1. Abrir la invitación
 
-La portada presenta los nombres cortos y un botón de película. Es posible recorrer fecha, dirección y confirmación sin ver el video.
+La portada presenta los nombres cortos y un botón de canción. La fotografía se mueve en un bucle suave; se puede recorrer toda la invitación sin activar sonido.
 
-### 2. Ver la historia
+### 2. Escuchar la canción
 
-Al pulsar la película aparece una recomendación de usar audífonos y girar el celular. “Listo, ver nuestra historia” abre el reproductor y establece el `src` del iframe. Al cerrar el diálogo se retira ese `src` para detener la reproducción. El giro no se fuerza mediante una API del sistema, y la calidad se administra en YouTube; no se promete 1080p obligatorio para todos los visitantes.
+“Nuestra canción, contigo” inicia el MP3 al tocarlo. El audio usa preload=none y loop; la animación visual funciona sin sonido y dura 26 segundos por ciclo. El botón de portada y un control flotante permiten pausar/reanudar. El control flotante aparece después de iniciar la canción. Los navegadores móviles suelen bloquear el sonido sin una interacción; no se fuerza autoplay audible. Al reducir movimiento se detiene la animación, y al salir la portada de pantalla se pausa su bucle visual. La canción puede seguir durante el recorrido.
 
 ### 3. Explorar fotos
 
@@ -498,9 +499,9 @@ Los contratos completos y ejemplos están en [docs/API.md](docs/API.md). Las rut
 
 ## Decisiones de diseño y desarrollo
 
-### Una invitación con ritmo de película
+### Una invitación que reserva su película
 
-La portada invita a escuchar la historia real de la pareja. El video es voluntario y la información práctica sigue disponible. Se evitó una pantalla que obligue a terminar la película para confirmar.
+Los novios eligieron proyectar el montaje final durante la boda. La invitación conserva el lenguaje cinematográfico con una fotografía en movimiento lento y música voluntaria, sin adelantar escenas ni entrevistas.
 
 ### Identidad de la pareja y firma del estudio
 
@@ -528,19 +529,19 @@ El invitado recibe un mensaje de aceptación, no una publicación inmediata. Sol
 
 ### Recursos locales y servicios externos limitados
 
-Las fuentes y la biblioteca QR están en el repositorio. YouTube aloja el video final para evitar descargar cientos de MB al abrir la invitación. WhatsApp es un enlace voluntario; no hay lectura de conversaciones ni envío de mensajes por parte del servidor.
+Las fuentes y la biblioteca QR están en el repositorio. La canción local se solicita cuando el visitante inicia el audio; no se descarga un video al abrir la página. WhatsApp es un enlace voluntario; no hay lectura de conversaciones ni envío de mensajes por parte del servidor.
 
 Hay más contexto en [docs/DECISIONES.md](docs/DECISIONES.md).
 
 ## Video, fotos y recursos
 
-### Película final
+### Portada y canción de esta versión
 
-ID de YouTube: `X3-ZLqJwMeo`. El menú de YouTube ofreció 1080p60 HD y 720p60. En una prueba seleccionó 240p automáticamente; se verificó que era posible seleccionar 1080p60 manualmente. Esto no significa que se pueda forzar esa calidad a todos los teléfonos desde el iframe.
+La película final queda reservada para la boda y ya no tiene acceso desde la invitación. Los videos preliminares tampoco se sirven como recursos públicos. No se modificó ni borró el montaje final original ni se cambió la configuración de su proveedor de video.
 
-Studio mostraba procesamiento SD/HD terminado, visibilidad “No listado” e incorporación permitida. También mostraba reclamos musicales: `Photograph` restringido en Rusia/Bielorrusia, `Viento` restringido en Rusia y `golden hour (Version Française)` sin efecto mostrado sobre el video. Ese estado fue observado durante la revisión y puede cambiar; no se garantiza disponibilidad futura. México no aparecía entre los territorios bloqueados de los dos reclamos consultados. No se demostró que esos reclamos causaran el error del iframe local.
+La animación de portada es movimiento de cámara simulado con CSS sobre la fotografía original, no un nuevo rodaje ni un video generado. El ciclo de 26 segundos empieza y termina con el mismo encuadre. Se detiene cuando la portada no está visible y respeta reducir movimiento.
 
-**Antes de publicar:** probar el video insertado en el dominio final y en los navegadores móviles reales. El enlace “También puedes verlo en YouTube” es la alternativa disponible.
+El archivo `dist/assets/music/photographs.mp3` es copia del MP3 proporcionado por el responsable: 257.83 segundos, estéreo a 44.1 kHz, aproximadamente 4.1 MB. No se modificó el original. Se reproduce tras un toque, al 55 % de volumen inicial y en bucle; el usuario puede pausarlo en portada o con el botón flotante. Probar salida de sonido y controles desde WhatsApp en dispositivos físicos antes de publicar.
 
 ### Galería
 
@@ -607,7 +608,7 @@ El equipo debe elegir un servicio que ejecute un backend con almacenamiento pers
 3. Mantener `.private/` fuera de la carpeta estática y con disco persistente.
 4. Conservar el mismo origen para frontend/API o adaptar con cuidado el control de origen y cookies.
 5. Resolver el acceso externo al panel considerando que la contraseña está publicada por decisión del responsable.
-6. Validar el iframe de YouTube en el dominio definitivo.
+6. Validar el inicio voluntario, la pausa de música y la animación de portada en el dominio definitivo.
 7. Revisar cantidad de acompañantes permitidos y si se necesita lista nominal y validación de pases.
 8. Ajustar el límite de fotos por IP si se usará Wi-Fi compartido en la boda.
 9. Preparar respaldo y procedimiento de recuperación.
@@ -632,7 +633,8 @@ Ruta de trabajo sugerida en [docs/ENTREGA-EQUIPO.md](docs/ENTREGA-EQUIPO.md).
 | Nombres, datos, horarios, copy, links y orden de secciones | `dist/index.html` |
 | Estilo y adaptación móvil | `dist/style.css` |
 | Abanico, apariciones y movimiento | `dist/motion.css`, `dist/motion.js` |
-| Video, visor, RSVP y generación de pase | `dist/app.js` |
+| Visor, RSVP y generación de pase | `dist/app.js` |
+| Canción y control flotante | `dist/music.js` |
 | Envío y consulta pública de recuerdos | `dist/memories.js` |
 | Estructura y estilo del panel | `dist/admin.html`, `dist/admin.css` |
 | Totales, filtros, exportación y acciones del panel | `dist/admin.js` |
@@ -656,8 +658,7 @@ Trabajar con datos de prueba, revisar visualmente y ejecutar comprobaciones ante
 | HEIC no se puede subir | Convertir una copia a JPG/PNG/WebP antes de enviar. |
 | Límite de fotos alcanzado con pocos invitados | Puede haber IP compartida de Wi-Fi; revisar límite por IP. |
 | Veo un logo anterior con fondo negro | Recargar; el HTML actual usa `vector-inside-white-transparent-v8.png`. Verificar que no se publicó un HTML antiguo. |
-| YouTube se ve borroso | Revisar su menú de calidad; en la prueba había 1080p60 disponible pero auto seleccionó 240p. |
-| YouTube no se reproduce dentro de la invitación | Probar el enlace directo y verificar inserción en el dominio final. No atribuirlo automáticamente a una causa no demostrada. |
+| La canción no empieza automáticamente | Es intencional: tocar el botón de canción. Si falla, revisar el archivo MP3 y que el teléfono tenga salida de sonido disponible. |
 | Un invitado aparece dos veces | Puede haber confirmado desde distintos dispositivos. Revisar manualmente antes de usar totales operativos. |
 | No puedo entrar desde mi celular al `127.0.0.1` de la computadora | Loopback identifica el propio dispositivo. Hace falta un servicio accesible o una configuración de red de pruebas acordada con el equipo. |
 
@@ -665,9 +666,21 @@ Trabajar con datos de prueba, revisar visualmente y ejecutar comprobaciones ante
 
 Dirección creativa y desarrollo de esta entrega: **Vector Inside**, con material y decisiones proporcionados por el responsable de la invitación y la pareja. Las fotos, nombres y marca se incluyen para este proyecto de boda. No se conceden derechos de reutilización comercial sobre fotografías o logotipos por el hecho de estar en un repositorio público.
 
-La biblioteca QR conserva su licencia MIT en `dist/assets/vendor/qrcode-LICENSE.txt`. Las tipografías conservan sus archivos de licencia OFL en `dist/assets/fonts/`. La música de la película no se incluye como biblioteca con licencia del proyecto; el responsable y el equipo deben gestionar su disponibilidad y uso con el proveedor correspondiente.
+La biblioteca QR conserva su licencia MIT en `dist/assets/vendor/qrcode-LICENSE.txt`. Las tipografías conservan sus archivos de licencia OFL en `dist/assets/fonts/`. La canción de esta versión fue proporcionada por el responsable para la invitación; incluir el MP3 no concede derechos de reutilización sobre la grabación.
 
 ## Referencias técnicas
 
 - [Python: alcance de http.server](https://docs.python.org/3/library/http.server.html), para la limitación del servidor de revisión frente a producción.
 - [GitHub: agregar archivos a un repositorio](https://docs.github.com/en/repositories/working-with-files/managing-files/adding-a-file-to-a-repository), para la carga y continuidad del trabajo.
+
+## Reinicio de pruebas y acceso V12
+
+Por solicitud del responsable se retiraron de la instalación local tres confirmaciones y tres fotos de prueba. Se conserva respaldo privado fuera de la carpeta pública y del repositorio. La lista y el álbum comienzan vacíos; las 12 fotografías editoriales permanecen; el video original se conserva fuera de la web. Se renovó el espacio de claves localStorage del pase y edición para no recuperar datos de pruebas anteriores.
+
+La contraseña del panel sigue siendo la indicada en este README. No existe una opción para cambiarla dentro del panel. Cada apertura de `/admin`, `/admin/` o `/admin.html` invalida la sesión que presentaba esa solicitud y muestra acceso por contraseña; volver desde historial recarga la página. El botón Actualizar dentro de un panel ya abierto no vuelve a pedir contraseña.
+
+Este proyecto debe cargarse únicamente en `VectorInside/INVITACION-DE-BODA-KARI-Y-ALEXIS`. No crear forks ni copias de contribución bajo otras cuentas sin una nueva autorización expresa.
+
+## Cambio V13 · Película reservada y portada con música
+
+Se retiró de la invitación todo acceso al montaje final y se movieron videos y subtítulos preliminares fuera de la carpeta pública. El nuevo hero usa una fotografía en movimiento lento de 26 segundos en bucle y la canción MP3 aportada por el responsable, con inicio voluntario y pausa. Se conserva el acceso de organizadores por contraseña y la limpieza V12 de datos de prueba.
