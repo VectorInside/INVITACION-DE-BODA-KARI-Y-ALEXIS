@@ -406,7 +406,7 @@ sequenceDiagram
     Pagina->>API: POST /api/photos
     API->>API: Validar formato, tamaño y dimensiones
     API->>Fotos: JPEG optimizado y registro pending
-    API-->>Invitado: Recibido; pendiente de revisión
+    API-->>Invitado: Recibido y pendiente de revisión
     Organizador->>API: Sesión + CSRF + aprobación
     API->>Fotos: Estado approved
     Album->>API: GET /api/photos
